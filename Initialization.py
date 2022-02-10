@@ -1,11 +1,7 @@
 """
-    CENTER FOR BIOETHICS AND RESEARCH (CBR)
-
-    Program:
-    CBR CITI Certificate Generator and Dispatcher
     Build 2018
-
     Purpose:
+    A browser-oriented program to keep up with the groups of participants recruited for a study.
 
 """
 #Import default and third-party python packages.
@@ -21,7 +17,7 @@ from app_model import Model
 from app_helpers import GenerateFollowUpSeries, ValId, ProcessSummary
 
 #subprocess.call('start', shell=True)
-class FFQCatalogue(object):
+class Catalogue(object):
     #Class variables
     url = "http://127.0.0.1:4000"
     today_date = dt.date.today()
@@ -63,9 +59,9 @@ class FFQCatalogue(object):
             participants['count_participants'] = len(dbase.view_participant_log())
             if kwargs == {}:
                 output = self.display.field_staff_participants(participants)
-            elif all(keys in kwargs for keys in ("ffq_base_date", "ffq_q_id", "ffq_24_id", "ffq_names", "ffq_sex", "ffq_tribe", "ffq_age_cat", "ffq_pnum_1", "ffq_pnum_2", "ffq_ses")):
+            elif all(keys in kwargs for keys in ("q_base_date", "q_q_id", "q_id", "q_names", "q_sex", "q_tribe", "q_age_cat", "q_pnum_1", "q_pnum_2", "q_ses")):
                 try:
-                    dbase.insert_participant_log(kwargs['ffq_base_date'], kwargs['ffq_q_id'], kwargs['ffq_24_id'], kwargs['ffq_names'], kwargs['ffq_sex'], kwargs['ffq_tribe'], kwargs['ffq_age_cat'], kwargs['ffq_pnum_1'], kwargs['ffq_pnum_2'], kwargs['ffq_ses'])
+                    dbase.insert_participant_log(kwargs['q_base_date'], kwargs['q_q_id'], kwargs['q_id'], kwargs['q_names'], kwargs['q_sex'], kwargs['q_tribe'], kwargs['q_age_cat'], kwargs['q_pnum_1'], kwargs['q_pnum_2'], kwargs['q_ses'])
                 except Exception as e:
                     participants['insert_error'] = """
                     <section class="alert alert-danger alert-dismissible fade show mt-3">
@@ -79,7 +75,7 @@ class FFQCatalogue(object):
                       <strong>Participant Succefully Added!</strong><br/> %s, has been added to the database.<br/>
                       <button type="button" class="btn btn-secondary btn-md btn-block"><a href="staff_participants" class="text-white">Add Another Participant</a></button>
                     </section>
-                    """ % kwargs['ffq_names'].capitalize()
+                    """ % kwargs['q_names'].capitalize()
                     output = self.display.field_staff_participants(participants)
             elif "id" in kwargs.keys():
                 participants['details'] = dbase.view_participant_log_by_id(kwargs['id'])
@@ -193,4 +189,4 @@ if __name__ == '__main__':
                     "tools.staticdir.dir": current_dir,
                     "tools.sessions.on": True}
                 }
-    mainframe.quickstart(FFQCatalogue(), "/", config=conf)
+    mainframe.quickstart(Catalogue(), "/", config=conf)
